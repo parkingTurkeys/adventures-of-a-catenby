@@ -7,22 +7,51 @@ https://sprig.hackclub.com/gallery/getting_started
 @tags: []
 @addedOn: 2024-00-00
 */
+
+
+//#all-the-arrays #arrays #ilovearrays #i-dont-care-if-some-of-them-are-objects #what-is-an-object-help
 const dialogue = [
   "haiii!",
-  "hallo..."
+  "i'm river!",
+  "i use they/them pronouns",
+  ":3",
+  "askdmkn djsvn kvb kdbvkdsvbjksdvnjksdnvjkdsnvjkdsnv"
 ]
 
-
+function endGame() {
+  setMap(levels[levels.length - 1])
+}
 const playerphoto = "p"
 const textbox = "t"
 const textboxtop = "^"
 const pumpkin = "ó"
+const bgroom = "-"
+const cursor = "#"
 
 const peoplephotos = [
   playerphoto,
-  pumpkin
+  playerphoto,
+  playerphoto,
+  playerphoto
 ]
 setLegend(
+  [ cursor, bitmap`
+...0............
+...000..........
+...0220.........
+...022200.......
+...02222200.....
+...022222220....
+...02222220.....
+...0222220......
+...022220.......
+...0222220......
+...02202220.....
+...000.02220....
+...0....020.....
+.........0......
+................
+................`],
   [ pumpkin, bitmap `................
 .......4........
 ......44........
@@ -77,6 +106,7 @@ DDDDDDDDDDDDDDDD`],
 DDDDDDDDDDDDDDDD
 4444444444444444
 DDDDDDDDDDDDDDDD
+4444444444444444
 DDDDDDDDDDDDDDDD
 DDDDDDDDDDDDDDDD
 DDDDDDDDDDDDDDDD
@@ -88,8 +118,24 @@ DDDDDDDDDDDDDDDD
 DDDDDDDDDDDDDDDD
 DDDDDDDDDDDDDDDD
 DDDDDDDDDDDDDDDD
-DDDDDDDDDDDDDDDD
-DDDDDDDDDDDDDDDD`]
+DDDDDDDDDDDDDDDD`],
+  [ bgroom, bitmap`
+7777777777777777
+7777777777777777
+7777777777777777
+7777777777777777
+7777777777777777
+7777777777777777
+7777777777777777
+7777777777777777
+7777777777777777
+7777777777777777
+7777777777777777
+7777777777777777
+7777777777777777
+7777777777777777
+7777777777777777
+7777777777777777`]
 )
 
 setSolids([])
@@ -97,20 +143,20 @@ setSolids([])
 let level = 0
 const levels = [
   map`
-tttttttttt
-tttttttttt
-tttttttttt
-tttttttttt
-tttttttttt
+----------
+----------
+----------
+----------
+----------
 ^^^^^^^^^^
 tttttttttt
 tttttttttt`,
   map`
-..........
-..........
-..........
-..........
-..........
+----------
+----------
+----------
+----------
+----------
 ^^^^^^^^^^
 tttttttttt
 tttttttttt`
@@ -182,7 +228,7 @@ const musics2 = tune`
 211.26760563380282: E5^211.26760563380282 + B4/211.26760563380282 + D5~211.26760563380282,
 211.26760563380282: B4^211.26760563380282`
 musicPlay = true
-playback = playTune(musics2, Infinity)
+playback = playTune(music, Infinity)
 
 //title screen
 
@@ -193,23 +239,50 @@ addText("catenby",{x:3, y:6, color:color`0`})
 
 setMap(levels[level])
 nexttext(playerphoto,"welcome!")
-addSprite(7,5,pumpkin)
+addSprite(5,2,pumpkin)
+addSprite(1,1,cursor)
+
 
 x = 0;
 onInput("k", () => {
   if (level==0){
     level = 1
+    let cursorxnow = getFirst(cursor).x
+    let cursorynow = getFirst(cursor).y
+    getAll(cursor).remove
     setMap(levels[level])
+    addSprite(cursorxnow,cursorynow,cursor)
+
   }
   clearText()
-  nexttext(peoplephotos[x],dialogue[x])
+  if (peoplephotos[x]) {
+    nexttext(peoplephotos[x],dialogue[x])
+  } else {
+    endGame()
+  }
   x++
 
 })
-
+onInput("w", () => {
+  getFirst(cursor).y --
+})
+onInput("a", () => {
+  getFirst(cursor).x --
+})
+onInput("s", () => {
+  getFirst(cursor).y ++
+})
+onInput("d", () => {
+  getFirst(cursor).x ++
+})
 function nexttext(person,text) {
   clearTile(1,6)
   addSprite(1,6,textbox)
   addSprite(1,6,person)
-  addText(text,{x:5, y:12, color:color`5`})
+  if (text.length <= 14){
+    addText(text,{x:5, y:12, color:color`5`})
+  } else if (text.length <= 28) {
+    addText(text.slice(0,14),{x:5, y:12, color:color`5`})
+    addText(text.slice(14),{x:5, y:13, color:color`5`})
+  }
 }
